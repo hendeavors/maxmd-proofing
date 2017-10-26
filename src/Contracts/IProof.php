@@ -1,6 +1,6 @@
 <?php
 
-namespace Endeavors\MaxMD\Proofing;
+namespace Endeavors\MaxMD\Proofing\Contracts;
 
 interface IProof
 {
