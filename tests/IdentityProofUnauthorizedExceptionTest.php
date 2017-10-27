@@ -19,6 +19,8 @@ class IdentityProofUnauthorizedExceptionTest extends \Orchestra\Testbench\TestCa
      */
     public function testExceptionIsThrownWhenBadCredentialsUsed()
     {
+        MaxMD::Logout();
+        
         MaxMD::Login("bad", "bad");
         
         $proof = new IdentityProof();
