@@ -42,21 +42,38 @@ class IdentityProofResponseTest extends \Orchestra\Testbench\TestCase
         $this->result->Raw();
     }
 
+    public function testRawResultCanBeJsonDecode()
+    {
+        $decoded = json_decode($this->result->Raw());
+
+        $this->assertNotNull($decoded);
+    }
+
+    public function testResultIsObject()
+    {
+        $this->assertTrue(is_object($this->result->ToObject()));
+    }
+
+    public function testResultIsArray()
+    {
+        $this->assertTrue(is_array($this->result->ToArray()));
+    }
+
     protected function person()
     {
         return [
-            'ssn' => '1234',
-            'mobilePhone' => 1234,
-            'email' => 'sdfsdf',
-            'street1' => 'sdfsdf',
-            'city' => 'sdfsdf',
-            'state' => 'sfsdfds',
-            'country' => 'us',
-            'zip5' => 'sdfsdf',
-            'firstName' => 'sdfsdf',
-            'lastName' => 'sdfsdf',
-            'ssn4' => 'sdfsdf',
-            'dob' => '1900-01-31'
+            'ssn' => '123456789',
+            'mobilePhone' => "+1 (555) 897-4564",
+            'email' => 'fake@email.com',
+            'street1' => '1234 Fake street',
+            'city' => 'Fake Town',
+            'state' => 'AK',
+            'country' => 'US',
+            'zip5' => '85412',
+            'firstName' => 'Steve',
+            'lastName' => 'Jobs',
+            'ssn4' => '6789',
+            'dob' => '1985-10-03'
         ];
     }
 }

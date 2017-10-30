@@ -12,7 +12,7 @@ trait ResponseTrait
      */
     public function JsonResponse()
     {
-        return new JsonResponse($this->Raw());
+        return new JsonResponse($this->ToObject());
     }
     
     /**
@@ -20,7 +20,17 @@ trait ResponseTrait
      */
     public function Response()
     {
-        return new Response($this->Raw());
+        return new Response(json_encode($this->Raw()));
+    }
+
+    public function ToArray()
+    {
+        return json_decode($this->response, true);
+    }
+
+    public function ToObject($associative = false)
+    {
+        return json_decode($this->response, $associative);
     }
     
     /**

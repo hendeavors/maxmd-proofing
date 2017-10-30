@@ -33,6 +33,8 @@ class IdentityProof implements IProof
     public function VerifyAndAuthenticate($request, $autoSendOTP = false)
     {
         if(Session::check()) {
+            $request = $this->sanitizeRequest($request);
+
             $this->response = Client::ProofingRest()->Post('personal/verifyAndAuthenticate/' . Session::getId() . '/' . $autoSendOTP, $request, array("Accept: application/json", "Content-Type: application/json"));
             
             return $this;
@@ -49,6 +51,8 @@ class IdentityProof implements IProof
     public function VerifyOneTimePassword($request)
     {
         if(Session::check()) {
+            $request = $this->sanitizeRequest($request);
+
             $this->response = Client::ProofingRest()->Post('personal/one-time-password-verify/' . Session::getId() . '/', $request, array("Accept: application/json", "Content-Type: application/json"));
         
             return $this;
@@ -65,6 +69,8 @@ class IdentityProof implements IProof
     public function VerifyCreditCard($request)
     {
         if(Session::check()) {
+            $request = $this->sanitizeRequest($request);
+
             $this->response = Client::ProofingRest()->Post('personal/one-time-password-verify/' . Session::getId() . '/', $request, array("Accept: application/json", "Content-Type: application/json"));
         
             return $this;
@@ -81,11 +87,43 @@ class IdentityProof implements IProof
     public function GenerateOneTimePassword($request)
     {
         if(Session::check()) {
+            $request = $this->sanitizeRequest($request);
+
             $this->response = Client::ProofingRest()->Post('personal/generateMFAOTP/' . Session::getId() . '/', $request, array("Accept: application/json", "Content-Type: application/json"));
         
             return $this;
         }
 
         throw new UnauthorizedAccessException("The credentials supplied are either invalid or your session has timed out.");
+    }
+    
+    // the below should probably go in support or http
+    protected function sanitizeRequest($request)
+    {
+        if( is_array($request) && isset($request['mobilePhone']) ) {
+            $request['mobilePhone'] = $this->sanitizeMobilePhone($request['mobilePhone']);
+        }
+        elseif( is_object($request) && isset($request->mobilePhone) ) {
+            $request->mobilePhone = $this->sanitizeMobilePhone($request->mobilePhone);
+        }
+
+        return $request;
+    }
+
+    protected function sanitizeMobilePhone($mobilePhone)
+    {
+        $validChars = '1234567890';
+        
+        $clean = '';
+        for($i=0;$i<mb_strlen($mobilePhone);++$i) {
+            $c = mb_substr($mobilePhone, $i, 1);
+            if(mb_strpos($validChars, $c)===false) {
+                $clean.='';
+            } else {
+                $clean.=$c;
+            }
+        }
+        
+        return $clean;
     }
 }
