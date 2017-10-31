@@ -25,20 +25,28 @@ class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
     {
         $this->assertTrue($this->result->ToObject()->success);
     }
+    
+    /**
+     * The person method below should pass this test
+     */
+    public function testMobileIsVerifiedAndGenerated()
+    {
+        $this->assertEquals("MFAOTPGenerated", $this->result->ToObject()->verificationStatus);
+    }
 
     protected function person()
     {
         return [
             'ssn' => '999999999',
-            'mobilePhone' => "+1 (555) 897-4564",
+            'mobilePhone' => "1(480) 364-6662",
             'email' => 'fake@email.com',
             'street1' => '1234 Fake street',
             'city' => 'Fake Town',
             'state' => 'AK',
             'country' => 'US',
             'zip5' => '85412',
-            'firstName' => 'Steve',
-            'lastName' => 'Jobs',
+            'firstName' => 'Adam',
+            'lastName' => 'Rodriguez',
             'ssn4' => '9999',
             'dob' => '1985-10-03'
         ];

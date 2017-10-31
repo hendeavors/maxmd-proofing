@@ -7,13 +7,15 @@ use Endeavors\MaxMD\Support\Client;
 use Endeavors\MaxMD\Api\Auth\Session;
 use Endeavors\MaxMD\Api\Auth\UnauthorizedAccessException;
 use Endeavors\MaxMD\Proofing\Traits\ResponseTrait;
+use Endeavors\MaxMD\Proofing\Traits\RequestValidator;
 
 /**
  * The developer will need to authenticate prior to using
+ * @todo add some validation for the required fields
  */
 class IdentityProof implements IProof
 {
-    use ResponseTrait;
+    use ResponseTrait, RequestValidator;
 
     protected $response;
     /**
@@ -21,7 +23,7 @@ class IdentityProof implements IProof
      */
     public function Verify($request)
     {
-        return $this->VerifyAndAuthenticate($request,true);
+        return $this->VerifyAndAuthenticate($request, true);
     }
     /**
      * @todo determine the failed response format
@@ -34,6 +36,8 @@ class IdentityProof implements IProof
     {
         if(Session::check()) {
             $request = $this->sanitizeRequest($request);
+
+            $autoSendOTP = $autoSendOTP ? "true" : "false";
 
             $this->response = Client::ProofingRest()->Post('personal/verifyAndAuthenticate/' . Session::getId() . '/' . $autoSendOTP, $request, array("Accept: application/json", "Content-Type: application/json"));
             
@@ -52,6 +56,8 @@ class IdentityProof implements IProof
     {
         if(Session::check()) {
             $request = $this->sanitizeRequest($request);
+
+            $this->validatesOneTimePasswordRequest($request);
 
             $this->response = Client::ProofingRest()->Post('personal/one-time-password-verify/' . Session::getId() . '/', $request, array("Accept: application/json", "Content-Type: application/json"));
         

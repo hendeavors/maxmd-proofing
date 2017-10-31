@@ -19,7 +19,7 @@ class IdentityProofTest extends \Orchestra\Testbench\TestCase
         
         $proof = new IdentityProof();
 
-        $proof->VerifyAndAuthenticate([], false);
+        $proof->VerifyAndAuthenticate([], true);
     }
 
     public function testCanCallVerifyAndAuthentication()
@@ -28,7 +28,7 @@ class IdentityProofTest extends \Orchestra\Testbench\TestCase
 
         $proof = new IdentityProof();
 
-        $proof->VerifyAndAuthenticate([], false);
+        $proof->VerifyAndAuthenticate([], true);
     }
 
     public function testCanCallVerifyCreditCard()
@@ -55,7 +55,13 @@ class IdentityProofTest extends \Orchestra\Testbench\TestCase
 
         $proof = new IdentityProof();
 
-        $proof->VerifyOneTimePassword([]);
+        $proof->VerifyOneTimePassword([
+            'otp' => 'test',
+            'firstName' => 'bob',
+            'lastName' => 'smith',
+            'ssn4' => 9999,
+            'dob' => '1985-10-03'
+        ]);
     }
 }
 
