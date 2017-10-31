@@ -68,7 +68,7 @@ class OneTimePasswordRequestValidator
 
     protected function getValue($key)
     {
-        return isset($this->requestAsArray()[$key]) ? $this->requestAsArray()[$key] : null;
+        return isset($this->requestAsArray()[$key]) && $this->requestAsArray()[$key] !== ''  ? $this->requestAsArray()[$key] : null;
     }
 
     protected function requiredFields()
