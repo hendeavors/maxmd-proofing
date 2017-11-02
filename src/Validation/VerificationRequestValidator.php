@@ -8,7 +8,7 @@ use Endeavors\MaxMD\Proofing\Contracts\IValidate;
  * The validators perform the exact same functionality, except for defining
  * The required fields. Inheritance makes sense at this point.
  */
-final class OneTimePasswordRequestValidator extends Validator implements IValidate
+final class VerificationRequestValidator extends Validator implements IValidate
 {
     protected $request;
 
@@ -29,11 +29,18 @@ final class OneTimePasswordRequestValidator extends Validator implements IValida
     protected function requiredFields()
     {
         return [
-            'otp',
             'firstName',
             'lastName',
             'ssn4',
-            'dob'
+            'dob',
+            'ssn',
+            'mobilePhone',
+            'email',
+            'street1',
+            'city',
+            'state',
+            'country',
+            'zip5'
         ];
     }
 }

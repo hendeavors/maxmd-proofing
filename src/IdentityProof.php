@@ -37,6 +37,8 @@ class IdentityProof implements IProof
         if(Session::check()) {
             $request = $this->sanitizeRequest($request);
 
+            $this->validatesVerificationRequest($request);
+
             $autoSendOTP = $autoSendOTP ? "true" : "false";
 
             $this->response = Client::ProofingRest()->Post('personal/verifyAndAuthenticate/' . Session::getId() . '/' . $autoSendOTP, $request, array("Accept: application/json", "Content-Type: application/json"));

@@ -13,23 +13,7 @@ class IdentityProofTest extends \Orchestra\Testbench\TestCase
         parent::setUp();
     }
 
-    public function testCanCallVerify()
-    {
-        $client = MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-
-        $proof->VerifyAndAuthenticate([], true);
-    }
-
-    public function testCanCallVerifyAndAuthentication()
-    {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-
-        $proof = new IdentityProof();
-
-        $proof->VerifyAndAuthenticate([], true);
-    }
+    
 
     public function testCanCallVerifyCreditCard()
     {
