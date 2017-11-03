@@ -3,12 +3,13 @@
 namespace Endeavors\MaxMD\Proofing\Validation;
 
 use Endeavors\MaxMD\Proofing\Contracts\IValidate;
+use Endeavors\MaxMD\Proofing\Contracts\IValidationMessage;
 
 /**
  * The validators perform the exact same functionality, except for defining
  * The required fields. Inheritance makes sense at this point.
  */
-final class VerificationRequestValidator extends Validator implements IValidate
+final class VerificationRequestValidator extends Validator implements IValidate, IValidationMessage
 {
     protected $request;
 

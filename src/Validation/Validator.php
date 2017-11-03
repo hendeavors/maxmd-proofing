@@ -3,6 +3,8 @@
 namespace Endeavors\MaxMD\Proofing\Validation;
 
 use Endeavors\MaxMD\Proofing\Contracts\IValidate;
+use Endeavors\MaxMD\Proofing\Contracts\IRetrievableValue;
+use Endeavors\Support\VO\ModernArray;
 
 /**
  * The validators perform the exact same functionality, except for defining
@@ -10,6 +12,8 @@ use Endeavors\MaxMD\Proofing\Contracts\IValidate;
  */
 abstract class Validator implements IValidate
 {
+    protected $valueRetriever;
+
     public function passes()
     {
         return ! $this->fails();
@@ -25,14 +29,8 @@ abstract class Validator implements IValidate
         return "Missing fields: " . $this->missingFields();
     }
 
-    protected function missingFields()
-    {
-        return implode(', ', $this->missingFields);
-    }
-
     public function validate()
     {
-        // check if otp,firstName,lastName,ssn4,dob exists
         foreach($this->requiredFields() as $field) {
             if( ! $this->hasValue($field) ) {
                 $this->missingFields[] = $field;
@@ -42,7 +40,21 @@ abstract class Validator implements IValidate
         return $this->missingFields;
     }
 
-    protected function requestAsArray()
+    public function setValueRetriever(IRetrievableValue $retriever)
+    {
+        $this->valueRetriever = $retriever;
+
+        return $this;
+    }
+
+    protected function missingFields()
+    {
+        $modernArray = ModernArray::create($this->missingFields);
+
+        return $modernArray->implode();
+    }
+
+    public function requestAsArray()
     {
         if(is_array($this->request)) {
             return $this->request;
@@ -51,13 +63,13 @@ abstract class Validator implements IValidate
         return (array)$this->request;
     }
 
-    protected function hasValue($key)
+    protected function hasValue($field)
     {
-        return null !== $this->getValue($key);
+        return null !== $this->getValue($field);
     }
 
-    protected function getValue($key)
+    protected function getValue($field)
     {
-        return isset($this->requestAsArray()[$key]) && $this->requestAsArray()[$key] !== ''  ? $this->requestAsArray()[$key] : null;
+        return $this->valueRetriever->getValue($field);
     }
 }

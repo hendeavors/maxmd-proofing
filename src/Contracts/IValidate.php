@@ -21,10 +21,9 @@ interface IValidate
      * void
      */
     function validate();
-
+    
     /**
-     * The output message from the validator
-     * @return string
+     * We'll need various ways to retrieve values from the input
      */
-    function message();
+    function setValueRetriever(IRetrievableValue $retriever);
 }

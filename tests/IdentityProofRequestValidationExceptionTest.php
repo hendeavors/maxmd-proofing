@@ -14,7 +14,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
     
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The request failed validation. Missing fields: otp, firstName, lastName, ssn4, dob
+     * @expectedExceptionMessage The request failed validation. Missing fields: otp, personMeta
      */
     public function testCallOneTimePasswordThrowsException()
     {
@@ -27,7 +27,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The request failed validation. Missing fields: firstName, lastName, ssn4, dob
+     * @expectedExceptionMessage The request failed validation. Missing fields: personMeta
      */
     public function testExceptionMessageExcludesOtp()
     {
@@ -42,32 +42,16 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage The request failed validation. Missing fields: otp, lastName, ssn4, dob
+     * @expectedExceptionMessage The request failed validation. Missing fields: otp
      */
-    public function testExceptionMessageExcludesFirstName()
+    public function testExceptionMessageExcludesPersonMeta()
     {
         MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
         
         $proof = new IdentityProof();
         
         $proof->VerifyOneTimePassword([
-            'firstName' => 'test'
-        ]);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage The request failed validation. Missing fields: otp, lastName, dob
-     */
-    public function testExceptionMessageExcludesFirstNameAndSsn()
-    {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $proof->VerifyOneTimePassword([
-            'firstName' => 'test',
-            'ssn4' => 'test'
+            'personMeta' => 'test'
         ]);
     }
 
@@ -75,18 +59,50 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      * @expectedException Exception
      * @expectedExceptionMessage The request failed validation. Missing fields: otp, firstName, lastName, ssn4, dob
      */
-    public function testExceptionMessageIncludesAllFields()
+    public function testExceptionMessageExcludesPersonMetaWithArray()
     {
         MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
         
         $proof = new IdentityProof();
         
         $proof->VerifyOneTimePassword([
-            'otp' => '',
-            'firstName' => '',
-            'lastName' => '',
-            'ssn4' => '',
-            'dob' => ''
+            'personMeta' => []
+        ]);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The request failed validation. Missing fields: firstName, lastName, ssn4, dob in personMeta
+     */
+    public function testExceptionMessageExcludesOtpAndPersonMetaWithArray()
+    {
+        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        
+        $proof = new IdentityProof();
+        
+        $proof->VerifyOneTimePassword([
+            'personMeta' => [],
+            'otp' => 'test'
+        ]);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The request failed validation. Missing fields: otp
+     */
+    public function testExceptionMessageExcludesPersonMetaWithArrayFilled()
+    {
+        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        
+        $proof = new IdentityProof();
+        
+        $proof->VerifyOneTimePassword([
+            'personMeta' => [
+                'firstName' => 'bob',
+                'lastName' => 'smith',
+                'ssn4' => 9999,
+                'dob' => '1985-10-03'
+            ]
         ]);
     }
     

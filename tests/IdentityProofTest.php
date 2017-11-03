@@ -13,8 +13,6 @@ class IdentityProofTest extends \Orchestra\Testbench\TestCase
         parent::setUp();
     }
 
-    
-
     public function testCanCallVerifyCreditCard()
     {
         MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
@@ -41,10 +39,12 @@ class IdentityProofTest extends \Orchestra\Testbench\TestCase
 
         $proof->VerifyOneTimePassword([
             'otp' => 'test',
-            'firstName' => 'bob',
-            'lastName' => 'smith',
-            'ssn4' => 9999,
-            'dob' => '1985-10-03'
+            'personMeta' => [
+                'firstName' => 'bob',
+                'lastName' => 'smith',
+                'ssn4' => 9999,
+                'dob' => '1985-10-03'
+            ]
         ]);
     }
 }
