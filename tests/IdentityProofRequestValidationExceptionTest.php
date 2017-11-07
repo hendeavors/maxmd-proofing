@@ -248,6 +248,46 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
         ]);
     }
 
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The request failed validation. Missing fields: creditCard
+     */
+    public function testVerificationOfCreditCardMissingCreditCardNode()
+    {
+        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        
+        $proof = new IdentityProof();
+        
+        $response = $proof->VerifyCreditCard([
+            'personMeta' => [
+                'firstName' => 'Adam',
+                'lastName' => 'Rodriguez',
+                'ssn4' => 9999,
+                'dob' => '1985-05-05'
+            ]    
+        ]);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The request failed validation. Missing fields: personMeta
+     */
+    public function testVerificationOfCreditCardMissingPersonMetaNode()
+    {
+        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        
+        $proof = new IdentityProof();
+        
+        $response = $proof->VerifyCreditCard([
+            'creditCard' => [
+                'cardNumber' => '4111111111111111',
+                'cvv' => '382',
+                'expireYear' => '2019',
+                'expireMonth' => '09'
+            ]  
+        ]);
+    }
+
     public function testVerificationOfCreditCardOfDifferentOrderedParameters()
     {
         MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));

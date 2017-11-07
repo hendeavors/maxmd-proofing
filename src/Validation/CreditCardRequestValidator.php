@@ -52,6 +52,8 @@ final class CreditCardRequestValidator extends Validator implements IValidate, I
                     }
                 }
             }
+        } else {
+            $this->missingFields[] = 'personMeta';
         }
 
         $this->request = $orignalRequest;
@@ -71,6 +73,8 @@ final class CreditCardRequestValidator extends Validator implements IValidate, I
                     }
                 }
             }
+        } else {
+            $this->missingFields[] = 'creditCard';
         }
 
         return $this->missingFields;
