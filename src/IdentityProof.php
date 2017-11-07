@@ -79,7 +79,9 @@ class IdentityProof implements IProof
         if(Session::check()) {
             $request = $this->sanitizeRequest($request);
 
-            $this->response = Client::ProofingRest()->Post('personal/one-time-password-verify/' . Session::getId() . '/', $request, array("Accept: application/json", "Content-Type: application/json"));
+            $this->validatesCreditCardRequest($request);
+
+            $this->response = Client::ProofingRest()->Post('personal/verifyCreditCard/' . Session::getId() . '/', $request, array("Accept: application/json", "Content-Type: application/json"));
         
             return $this;
         }

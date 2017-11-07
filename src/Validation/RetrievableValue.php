@@ -22,22 +22,4 @@ class RetrievableValue implements IRetrievableValue
     {
         return $this->validator->requestAsArray();
     }
-
-    protected function search($request, $field)
-    {
-        $result = null;
-
-        if( is_string($field) && isset($request[$field]) && $request[$field] !== '' ) {
-            $result = $request[$field];
-        }
-        elseif( is_array($field) && is_array($request) ) {
-            foreach($request as $nextRequest) {
-                foreach($field as $next) {
-                    $result = $this->search($nextRequest,$next);
-                }
-            }
-        }
-
-        return $result;
-    }
 }

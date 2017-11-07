@@ -31,7 +31,32 @@ class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
      */
     public function testMobileIsVerifiedAndGenerated()
     {
-        $this->assertEquals("MFAOTPGenerated", $this->result->ToObject()->verificationStatus);
+        // we are either certified or a mobile onetimepassword has been sent
+        $result = $this->result->ToObject()->verificationStatus == "MFAOTPGenerated" || $this->result->ToObject()->verificationStatus == "LoA3Certified";
+        
+        $this->assertTrue($result);
+    }
+
+    public function testVerificationOfCreditCard()
+    {
+        $proof = new IdentityProof();
+        
+        $response = $proof->VerifyCreditCard([
+            'personMeta' => [
+                'firstName' => 'Adam',
+                'lastName' => 'Rodriguez',
+                'ssn4' => 9999,
+                'dob' => '1985-05-05'
+            ],
+            'creditCard' => [
+                'cardNumber' => '4111111111111111',
+                'cvv' => '382',
+                'expireYear' => '2019',
+                'expireMonth' => '09'
+            ]
+        ]);
+
+        $this->assertTrue($response->ToObject()->success);
     }
 
     protected function person()

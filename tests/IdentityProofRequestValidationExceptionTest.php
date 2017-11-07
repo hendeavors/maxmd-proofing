@@ -149,4 +149,124 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
             'street1' => ''
         ]);
     }
+    
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The request failed validation. Missing fields: firstName, lastName
+     */
+    public function testVerificationOfCreditCardMissingFirstAndLastName()
+    {
+        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        
+        $proof = new IdentityProof();
+        
+        $response = $proof->VerifyCreditCard([
+            'personMeta' => [
+                'frstName' => 'Adam',
+                'latName' => 'Rodriguez',
+                'ssn4' => 9999,
+                'dob' => '1985-05-05'
+            ],
+            'creditCard' => [
+                'cardNumber' => '4111111111111111',
+                'cvv' => '382',
+                'expireYear' => '2019',
+                'expireMonth' => '09'
+            ]
+        ]);
+    }
+    
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The request failed validation. Missing fields: firstName, lastName
+     */
+    public function testVerificationOfCreditCard()
+    {
+        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        
+        $proof = new IdentityProof();
+        
+        $response = $proof->VerifyCreditCard([
+            'personMeta' => [
+                'frstName' => 'Adam',
+                'latName' => 'Rodriguez',
+                'ssn4' => 9999,
+                'dob' => '1985-05-05'
+            ],
+            'creditCard' => [
+                'cardNumber' => '4111111111111111',
+                'cvv' => '382',
+                'expireYear' => '2019',
+                'expireMonth' => '09'
+            ]
+        ]);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The request failed validation. Missing fields: cardNumber, cvv, expireYear, expireMonth
+     */
+    public function testVerificationOfCreditCardMissingCreditCard()
+    {
+        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        
+        $proof = new IdentityProof();
+        
+        $response = $proof->VerifyCreditCard([
+            'personMeta' => [
+                'firstName' => 'Adam',
+                'lastName' => 'Rodriguez',
+                'ssn4' => 9999,
+                'dob' => '1985-05-05'
+            ],
+            'creditCard' => [
+                
+            ]
+        ]);
+    }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage The request failed validation. Missing fields: firstName, lastName, ssn4, dob
+     */
+    public function testVerificationOfCreditCardMissingPersonMeta()
+    {
+        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        
+        $proof = new IdentityProof();
+        
+        $response = $proof->VerifyCreditCard([
+            'personMeta' => [
+                
+            ],
+            'creditCard' => [
+                'cardNumber' => '4111111111111111',
+                'cvv' => '382',
+                'expireYear' => '2019',
+                'expireMonth' => '09'
+            ]
+        ]);
+    }
+
+    public function testVerificationOfCreditCardOfDifferentOrderedParameters()
+    {
+        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        
+        $proof = new IdentityProof();
+        
+        $response = $proof->VerifyCreditCard([
+            'personMeta' => [
+                'ssn4' => 9999,
+                'lastName' => 'Rodriguez',
+                'firstName' => 'Adam',
+                'dob' => '1985-05-05'
+            ],
+            'creditCard' => [
+                'cardNumber' => '4111111111111111',
+                'cvv' => '382',
+                'expireYear' => '2019',
+                'expireMonth' => '09'
+            ]
+        ]);
+    }
 }
