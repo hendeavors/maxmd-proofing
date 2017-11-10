@@ -27,7 +27,7 @@
     "require": {
         "endeavors/maxmd-http": "*",
         "endeavors/maxmd-apiauth": "*",
-        "endeavors/support-vo": "0.1.*@dev"
+        "endeavors/support-vo": "0.1.0"
     },
     "autoload": {
         "psr-4": {
