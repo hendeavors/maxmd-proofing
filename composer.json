@@ -28,7 +28,7 @@
         "endeavors/maxmd-http": "*",
         "endeavors/maxmd-apiauth": "*",
         "endeavors/support-vo": "1.2.*@dev",
-        "endeavors/maxmd-support": "dev-master"
+        "endeavors/maxmd-support": "^1.0"
     },
     "autoload": {
         "psr-4": {
