@@ -17,10 +17,6 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/hendeavors/maxmd-support.git"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/hendeavors/maxmd-apiauth.git"
         }
     ],
