@@ -13,7 +13,7 @@ class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
     public function setUp()
     {
         MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
+
         $proof = new IdentityProof();
 
         $this->result = $proof->Verify($this->person());
@@ -25,7 +25,7 @@ class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
     {
         $this->assertTrue($this->result->ToObject()->success);
     }
-    
+
     /**
      * The person method below should pass this test
      */
@@ -33,14 +33,14 @@ class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
     {
         // we are either certified or a mobile onetimepassword has been sent
         $result = $this->result->ToObject()->verificationStatus == "MFAOTPGenerated" || $this->result->ToObject()->verificationStatus == "LoA3Certified";
-        
+
         $this->assertTrue($result);
     }
 
     public function testVerificationOfCreditCard()
     {
         $proof = new IdentityProof();
-        
+
         $response = $proof->VerifyCreditCard([
             'personMeta' => [
                 'firstName' => 'Adam',
@@ -56,6 +56,29 @@ class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
             ]
         ]);
 
+        $this->assertTrue($response->ToObject()->success);
+    }
+
+    public function testDeletePerson()
+    {
+        $proof = new IdentityProof();
+
+        $response = $proof->VerifyCreditCard([
+            'personMeta' => [
+                'firstName' => 'Adam',
+                'lastName' => 'Rodriguez',
+                'ssn4' => 9999,
+                'dob' => '1985-05-05'
+            ],
+            'creditCard' => [
+                'cardNumber' => '4111111111111111',
+                'cvv' => '382',
+                'expireYear' => '2019',
+                'expireMonth' => '09'
+            ]
+        ]);
+
+        $response = $proof->DeletePerson($response->ToObject()->personMeta->id);
         $this->assertTrue($response->ToObject()->success);
     }
 
@@ -77,4 +100,3 @@ class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
         ];
     }
 }
-
