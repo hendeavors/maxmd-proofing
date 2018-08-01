@@ -42,13 +42,13 @@ class IdentityProof implements IProof
             $autoSendOTP = $autoSendOTP ? "true" : "false";
 
             $this->response = Client::ProofingRest()->Post('personal/verifyAndAuthenticate/' . Session::getId() . '/' . $autoSendOTP, $request, array("Accept: application/json", "Content-Type: application/json"));
-            
+
             return $this;
         }
 
         throw new UnauthorizedAccessException("The credentials supplied are either invalid or your session has timed out.");
     }
-    
+
     /**
      * We'll drop in the session id
      * @param $request VerifyOTPRequestType https://evalapi.max.md:8445/AutoProofingRESTful/#VerifyOTPRequestType
@@ -62,7 +62,7 @@ class IdentityProof implements IProof
             $this->validatesOneTimePasswordRequest($request);
 
             $this->response = Client::ProofingRest()->Post('personal/one-time-password-verify/' . Session::getId() . '/', $request, array("Accept: application/json", "Content-Type: application/json"));
-        
+
             return $this;
         }
 
@@ -82,7 +82,7 @@ class IdentityProof implements IProof
             $this->validatesCreditCardRequest($request);
 
             $this->response = Client::ProofingRest()->Post('personal/verifyCreditCard/' . Session::getId() . '/', $request, array("Accept: application/json", "Content-Type: application/json"));
-        
+
             return $this;
         }
 
@@ -100,13 +100,28 @@ class IdentityProof implements IProof
             $request = $this->sanitizeRequest($request);
 
             $this->response = Client::ProofingRest()->Post('personal/generateMFAOTP/' . Session::getId() . '/', $request, array("Accept: application/json", "Content-Type: application/json"));
-        
+
             return $this;
         }
 
         throw new UnauthorizedAccessException("The credentials supplied are either invalid or your session has timed out.");
     }
-    
+
+    /**
+     * Delete a person given their id
+     * @param int $userId
+     */
+    public function DeletePerson($userId)
+    {
+      if(Session::check()) {
+          $this->response = Client::ProofingRest()->Delete('personal/GetRegisteredPersons/' . Session::getId() . '/' . $userId, array(), array("Accept: application/json", "Content-Type: application/json"));
+
+          return $this;
+      }
+
+      throw new UnauthorizedAccessException("The credentials supplied are either invalid or your session has timed out.");
+    }
+
     // the below should probably go in support or http
     protected function sanitizeRequest($request)
     {
@@ -123,7 +138,7 @@ class IdentityProof implements IProof
     protected function sanitizeMobilePhone($mobilePhone)
     {
         $validChars = '1234567890';
-        
+
         $clean = '';
         for($i=0;$i<mb_strlen($mobilePhone);++$i) {
             $c = mb_substr($mobilePhone, $i, 1);
@@ -133,7 +148,7 @@ class IdentityProof implements IProof
                 $clean.=$c;
             }
         }
-        
+
         return $clean;
     }
 }
