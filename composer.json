@@ -13,16 +13,18 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/bpedroza/maxmd-http.git"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/bpedroza/maxmd-support.git"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/bpedroza/maxmd-apiauth.git"
+        }
+    ],
     "require": {
-        "endeavors/maxmd-http": "psr7-dev",
-        "endeavors/maxmd-apiauth": "*",
+        "endeavors/maxmd-http": "0.3.*",
+        "endeavors/maxmd-apiauth": "support-version-dev",
         "endeavors/maxmd-support": "developer-options-dev",
         "endeavors/support-vo": "^2.0"
     },
