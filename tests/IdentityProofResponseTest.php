@@ -5,36 +5,37 @@ namespace Endeavors\MaxMD\Proofing\Tests;
 use Endeavors\MaxMD\Proofing\IdentityProof;
 use Endeavors\MaxMD\Api\Auth\MaxMD;
 use Endeavors\MaxMD\Api\Auth\Session;
+use Psr\Http\Message\ResponseInterface;
 
-class IdentityProofResponseTest extends \Orchestra\Testbench\TestCase
+class IdentityProofResponseTest extends TestCase
 {
     protected $result;
 
     public function setUp()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
+        parent::setUp();
+
+        MaxMD::Login(getenv("MAXMD_APIUSERNAME"),getenv("MAXMD_APIPASSWORD"));
+
         $proof = new IdentityProof();
 
         $this->result = $proof->Verify($this->person());
-
-        parent::setUp();
     }
 
     public function testResultIsJsonResponse()
     {
-        $this->assertInstanceOf(\Endeavors\MaxMD\Http\JsonResponse::class, $this->result->JsonResponse());
+        $this->assertInstanceOf(ResponseInterface::class, $this->result->JsonResponse());
 
-        $this->assertNotNull($this->result->JsonResponse()->getContent());
-        $this->assertNotEquals("", $this->result->JsonResponse()->getContent());
+        $this->assertNotNull($this->result->JsonResponse()->getBody()->getContents());
+        $this->assertNotEquals("", $this->result->JsonResponse()->getBody()->getContents());
     }
 
     public function testResultIsResponse()
     {
-        $this->assertInstanceOf(\Endeavors\MaxMD\Http\Response::class, $this->result->Response());
-        
-        $this->assertNotNull($this->result->Response()->getContent());
-        $this->assertNotEquals("", $this->result->Response()->getContent());
+        $this->assertInstanceOf(ResponseInterface::class, $this->result->Response());
+
+        $this->assertNotNull($this->result->Response()->getBody()->getContents());
+        $this->assertNotEquals("", $this->result->Response()->getBody()->getContents());
     }
 
     public function testResultIsRaw()
@@ -77,4 +78,3 @@ class IdentityProofResponseTest extends \Orchestra\Testbench\TestCase
         ];
     }
 }
-

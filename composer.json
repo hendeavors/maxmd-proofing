@@ -13,21 +13,17 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/hendeavors/maxmd-http.git"
+            "url": "https://github.com/bpedroza/maxmd-http.git"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/hendeavors/maxmd-support.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/hendeavors/maxmd-apiauth.git"
+            "url": "https://github.com/bpedroza/maxmd-support.git"
         }
     ],
     "require": {
-        "endeavors/maxmd-http": "*",
+        "endeavors/maxmd-http": "psr7-dev",
         "endeavors/maxmd-apiauth": "*",
-        "endeavors/maxmd-support": "^1.0",
+        "endeavors/maxmd-support": "developer-options-dev",
         "endeavors/support-vo": "^2.0"
     },
     "autoload": {
@@ -41,7 +37,7 @@
         }
     },
     "require-dev": {
-        "orchestra/testbench": "3.2.*"
+        "phpunit/phpunit": "^7.0"
     },
     "extra": {
         "branch-alias": {

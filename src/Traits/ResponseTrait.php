@@ -12,15 +12,15 @@ trait ResponseTrait
      */
     public function JsonResponse()
     {
-        return new JsonResponse($this->ToObject());
+        return JsonResponse::make($this->ToObject());
     }
-    
+
     /**
      * Provide a convenient Response method
      */
     public function Response()
     {
-        return new Response(json_encode($this->Raw()));
+        return Response::make(json_encode($this->Raw()));
     }
 
     public function ToArray()
@@ -32,7 +32,7 @@ trait ResponseTrait
     {
         return json_decode($this->response, $associative);
     }
-    
+
     /**
      * Provide a the Raw response if the developer wishes to customize the output
      */
