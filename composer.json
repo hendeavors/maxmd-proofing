@@ -10,22 +10,10 @@
         }
     ],
     "minimum-stability": "dev",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/bpedroza/maxmd-support.git"
-        }
-    ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/bpedroza/maxmd-apiauth.git"
-        }
-    ],
     "require": {
         "endeavors/maxmd-http": "0.3.*",
-        "endeavors/maxmd-apiauth": "support-version-dev",
-        "endeavors/maxmd-support": "developer-options-dev",
+        "endeavors/maxmd-apiauth": "0.1.*",
+        "endeavors/maxmd-support": "~1.4.0",
         "endeavors/support-vo": "^2.0"
     },
     "autoload": {
