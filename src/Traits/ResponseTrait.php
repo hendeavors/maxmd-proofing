@@ -4,13 +4,14 @@ namespace Endeavors\MaxMD\Proofing\Traits;
 
 use Endeavors\MaxMD\Http\JsonResponse;
 use Endeavors\MaxMD\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 
 trait ResponseTrait
 {
     /**
      * Provide a convenient JsonResponse method
      */
-    public function JsonResponse()
+    public function JsonResponse(): ResponseInterface
     {
         return JsonResponse::make($this->ToObject());
     }
@@ -18,7 +19,7 @@ trait ResponseTrait
     /**
      * Provide a convenient Response method
      */
-    public function Response()
+    public function Response(): ResponseInterface
     {
         return Response::make(json_encode($this->Raw()));
     }
