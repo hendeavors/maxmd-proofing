@@ -5,24 +5,29 @@ namespace Endeavors\MaxMD\Proofing\Tests;
 use Endeavors\MaxMD\Api\Auth\MaxMD;
 use Endeavors\MaxMD\Proofing\IdentityProof;
 
-class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\TestCase
+class IdentityProofRequestValidationExceptionTest extends TestCase
 {
+    /**
+     * @var IdentityProof
+     */
+    private $proof;
+
     public function setUp()
     {
         parent::setUp();
+
+        MaxMD::Login(getenv("MAXMD_APIUSERNAME"),getenv("MAXMD_APIPASSWORD"));
+
+        $this->proof = new IdentityProof();
     }
-    
+
     /**
      * @expectedException Exception
      * @expectedExceptionMessage The request failed validation. Missing fields: otp, personMeta
      */
     public function testCallOneTimePasswordThrowsException()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $proof->VerifyOneTimePassword([]);
+        $this->proof->VerifyOneTimePassword([]);
     }
 
     /**
@@ -31,11 +36,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testExceptionMessageExcludesOtp()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $proof->VerifyOneTimePassword([
+        $this->proof->VerifyOneTimePassword([
             'otp' => 'test'
         ]);
     }
@@ -46,11 +47,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testExceptionMessageExcludesPersonMeta()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $proof->VerifyOneTimePassword([
+        $this->proof->VerifyOneTimePassword([
             'personMeta' => 'test'
         ]);
     }
@@ -61,11 +58,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testExceptionMessageExcludesPersonMetaWithArray()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $proof->VerifyOneTimePassword([
+        $this->proof->VerifyOneTimePassword([
             'personMeta' => []
         ]);
     }
@@ -76,11 +69,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testExceptionMessageExcludesOtpAndPersonMetaWithArray()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $proof->VerifyOneTimePassword([
+        $this->proof->VerifyOneTimePassword([
             'personMeta' => [],
             'otp' => 'test'
         ]);
@@ -92,11 +81,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testExceptionMessageExcludesPersonMetaWithArrayFilled()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $proof->VerifyOneTimePassword([
+        $this->proof->VerifyOneTimePassword([
             'personMeta' => [
                 'firstName' => 'bob',
                 'lastName' => 'smith',
@@ -105,18 +90,14 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
             ]
         ]);
     }
-    
+
     /**
      * @expectedException Exception
      * @expectedExceptionMessage The request failed validation. Missing fields: firstName, lastName, ssn4, dob, ssn, mobilePhone, email, street1, city, state, country, zip5
      */
     public function testVerifyExceptionMessageIncludesAllFields()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $proof->Verify([
+        $this->proof->Verify([
             'firstName' => '',
             'lastName' => '',
             'ssn4' => '',
@@ -134,11 +115,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testVerifyExceptionMessageExcludesFirstAndLast()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $proof->Verify([
+        $this->proof->Verify([
             'firstName' => 'test',
             'lastName' => 'test',
             'ssn4' => '',
@@ -149,18 +126,14 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
             'street1' => ''
         ]);
     }
-    
+
     /**
      * @expectedException Exception
      * @expectedExceptionMessage The request failed validation. Missing fields: firstName, lastName
      */
     public function testVerificationOfCreditCardMissingFirstAndLastName()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $response = $proof->VerifyCreditCard([
+        $response = $this->proof->VerifyCreditCard([
             'personMeta' => [
                 'frstName' => 'Adam',
                 'latName' => 'Rodriguez',
@@ -175,18 +148,14 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
             ]
         ]);
     }
-    
+
     /**
      * @expectedException Exception
      * @expectedExceptionMessage The request failed validation. Missing fields: firstName, lastName
      */
     public function testVerificationOfCreditCard()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $response = $proof->VerifyCreditCard([
+        $response = $this->proof->VerifyCreditCard([
             'personMeta' => [
                 'frstName' => 'Adam',
                 'latName' => 'Rodriguez',
@@ -208,11 +177,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testVerificationOfCreditCardMissingCreditCard()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $response = $proof->VerifyCreditCard([
+        $response = $this->proof->VerifyCreditCard([
             'personMeta' => [
                 'firstName' => 'Adam',
                 'lastName' => 'Rodriguez',
@@ -220,7 +185,7 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
                 'dob' => '1985-05-05'
             ],
             'creditCard' => [
-                
+
             ]
         ]);
     }
@@ -231,13 +196,9 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testVerificationOfCreditCardMissingPersonMeta()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $response = $proof->VerifyCreditCard([
+        $response = $this->proof->VerifyCreditCard([
             'personMeta' => [
-                
+
             ],
             'creditCard' => [
                 'cardNumber' => '4111111111111111',
@@ -254,17 +215,13 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testVerificationOfCreditCardMissingCreditCardNode()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $response = $proof->VerifyCreditCard([
+        $response = $this->proof->VerifyCreditCard([
             'personMeta' => [
                 'firstName' => 'Adam',
                 'lastName' => 'Rodriguez',
                 'ssn4' => 9999,
                 'dob' => '1985-05-05'
-            ]    
+            ]
         ]);
     }
 
@@ -274,27 +231,19 @@ class IdentityProofRequestValidationExceptionTest extends \Orchestra\Testbench\T
      */
     public function testVerificationOfCreditCardMissingPersonMetaNode()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $response = $proof->VerifyCreditCard([
+        $response = $this->proof->VerifyCreditCard([
             'creditCard' => [
                 'cardNumber' => '4111111111111111',
                 'cvv' => '382',
                 'expireYear' => '2019',
                 'expireMonth' => '09'
-            ]  
+            ]
         ]);
     }
 
     public function testVerificationOfCreditCardOfDifferentOrderedParameters()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
-        $proof = new IdentityProof();
-        
-        $response = $proof->VerifyCreditCard([
+        $response = $this->proof->VerifyCreditCard([
             'personMeta' => [
                 'ssn4' => 9999,
                 'lastName' => 'Rodriguez',

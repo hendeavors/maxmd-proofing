@@ -6,16 +6,11 @@ use Endeavors\MaxMD\Proofing\IdentityProof;
 use Endeavors\MaxMD\Api\Auth\MaxMD;
 use Endeavors\MaxMD\Api\Auth\Session;
 
-class IdentityProofTest extends \Orchestra\Testbench\TestCase
+class IdentityProofTest extends TestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
     public function testCanCallGenerateOneTimePassword()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        MaxMD::Login(getenv("MAXMD_APIUSERNAME"),getenv("MAXMD_APIPASSWORD"));
 
         $proof = new IdentityProof();
 
@@ -24,7 +19,7 @@ class IdentityProofTest extends \Orchestra\Testbench\TestCase
 
     public function testCanCallVerifyOneTimePassword()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
+        MaxMD::Login(getenv("MAXMD_APIUSERNAME"),getenv("MAXMD_APIPASSWORD"));
 
         $proof = new IdentityProof();
 
@@ -39,4 +34,3 @@ class IdentityProofTest extends \Orchestra\Testbench\TestCase
         ]);
     }
 }
-

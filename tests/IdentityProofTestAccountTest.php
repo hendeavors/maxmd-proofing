@@ -6,26 +6,26 @@ use Endeavors\MaxMD\Proofing\IdentityProof;
 use Endeavors\MaxMD\Api\Auth\MaxMD;
 use Endeavors\MaxMD\Api\Auth\Session;
 
-class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
+class IdentityProofTestAccountTest extends TestCase
 {
     protected $result;
 
     public function setUp()
     {
-        MaxMD::Login(env("MAXMD_APIUSERNAME"),env("MAXMD_APIPASSWORD"));
-        
+        parent::setUp();
+
+        MaxMD::Login(getenv("MAXMD_APIUSERNAME"),getenv("MAXMD_APIPASSWORD"));
+
         $proof = new IdentityProof();
 
         $this->result = $proof->Verify($this->person());
-
-        parent::setUp();
     }
 
     public function testProofingIsSuccessful()
     {
         $this->assertTrue($this->result->ToObject()->success);
     }
-    
+
     /**
      * The person method below should pass this test
      */
@@ -33,14 +33,14 @@ class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
     {
         // we are either certified or a mobile onetimepassword has been sent
         $result = $this->result->ToObject()->verificationStatus == "MFAOTPGenerated" || $this->result->ToObject()->verificationStatus == "LoA3Certified";
-        
+
         $this->assertTrue($result);
     }
 
     public function testVerificationOfCreditCard()
     {
         $proof = new IdentityProof();
-        
+
         $response = $proof->VerifyCreditCard([
             'personMeta' => [
                 'firstName' => 'Adam',
@@ -77,4 +77,3 @@ class IdentityProofTestAccountTest extends \Orchestra\Testbench\TestCase
         ];
     }
 }
-

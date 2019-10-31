@@ -6,13 +6,8 @@ use Endeavors\MaxMD\Proofing\IdentityProof;
 use Endeavors\MaxMD\Api\Auth\MaxMD;
 use Endeavors\MaxMD\Api\Auth\Session;
 
-class IdentityProofUnauthorizedExceptionTest extends \Orchestra\Testbench\TestCase
+class IdentityProofUnauthorizedExceptionTest extends TestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-    }
-    
     /**
      * @expectedException Exception
      * @expectedExceptionMessage The credentials supplied are either invalid or your session has timed out.
@@ -20,12 +15,11 @@ class IdentityProofUnauthorizedExceptionTest extends \Orchestra\Testbench\TestCa
     public function testExceptionIsThrownWhenBadCredentialsUsed()
     {
         MaxMD::Logout();
-        
+
         MaxMD::Login("bad", "bad");
-        
+
         $proof = new IdentityProof();
 
         $proof->Verify([]);
     }
 }
-
